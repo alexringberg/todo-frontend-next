@@ -73,7 +73,7 @@ const Home: NextPage = () => {
           </TodoListItemButton>
         </TodoListItem>
       );
-    })
+    })?? null
 
   return (
     <TodoListDiv>
