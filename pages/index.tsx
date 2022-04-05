@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { GetTodoListAPI, AddTodoAPI, UpdateTodoAPI, DeleteTodoAPI } from '../services/TodoService';
 import { ITodo } from '../models/Todos';
 import styled from "styled-components"
+import Todos from '../components/Todos';
 
 const Home: NextPage = () => {
   const [newTodoText, setNewTodoText] = useState<string>("");
@@ -24,7 +25,6 @@ const Home: NextPage = () => {
     }
     
     const res = await AddTodoAPI(newTodoText)
-    console.log(res)
 
     GetData()
   };
@@ -48,33 +48,6 @@ const Home: NextPage = () => {
     await DeleteTodoAPI(todoToDelete)
   };
 
-  const GetTodos = todos
-    .map((todo, index) => {
-      return (
-        <TodoListItem key={index}>
-          <TodoListItemInput
-            type="checkbox"
-            checked={todo.completed}
-            onChange={(e) => {
-              UpdateTodo(index);
-            }}
-          ></TodoListItemInput>
-          <TodoListItemP
-            style={{ textDecoration: todo.completed ? "line-through" : "" }}
-          >
-            {todo.description}
-          </TodoListItemP>
-          <TodoListItemButton
-            onClick={(e) => {
-              DeleteTodo(index);
-            }}
-          >
-            X
-          </TodoListItemButton>
-        </TodoListItem>
-      );
-    })?? null
-
   return (
     <TodoListDiv>
       <TodoListTitle>Ringberg ToDo List</TodoListTitle>
@@ -82,13 +55,15 @@ const Home: NextPage = () => {
         <TodoListFormItem type="text" name="newTodo" value={newTodoText}onChange={(e) => setNewTodoText(e.target.value)}></TodoListFormItem>
         <TodoListFormButton>Add</TodoListFormButton>
       </TodoListForm>
-      <TodoList>{GetTodos}</TodoList>
+      <TodoList>
+        <Todos todos={todos} updateTodo={UpdateTodo} deleteTodo={DeleteTodo}></Todos>
+      </TodoList>
     </TodoListDiv>
   );
 }
 
 const TodoListDiv = styled.div`
-  max-width: 350px;
+  max-width: 360px;
   max-height: fit-content;
   min-height: 300px;
   padding: 25px;
@@ -99,11 +74,12 @@ const TodoListDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(95, 197, 192);
+  background-color: #1F1B24;
 `
 
 const TodoListTitle = styled.h1`
-  font-size: 25px
+  font-size: 25px;
+  color: #FFFFFF;
 `
 
 const TodoListForm = styled.form`
@@ -125,7 +101,7 @@ const TodoListFormButton = styled.button`
   border-radius: 5px;
   padding: 5px 10px;
   color: white;
-  background-color: deepskyblue;
+  background-color: #3700B3;
 `
 
 const TodoList = styled.ul`
@@ -136,31 +112,4 @@ const TodoList = styled.ul`
   padding: 5px
 `
 
-const TodoListItem = styled.li`
-  list-style-type: none;
-  width: 100%;
-  display: flex;
-`
-
-const TodoListItemInput = styled.input`
-  width: 10%;
-  background-color: brown;
-`
-
-const TodoListItemP = styled.p`
-  width: 90%;
-  font-size: medium;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  margin-top: 2px;
-`
-
-const TodoListItemButton = styled.button`
-  border: transparent;
-  color:rgb(167, 167, 167);
-  font-weight: 800;
-  border-radius: 5px;
-  background: rgba(56, 54, 54, 0.863);
-  width: 9%;
-  max-height: 25px;
-`
 export default Home
