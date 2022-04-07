@@ -8,6 +8,15 @@ interface Props {
 }
 
 const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
+  todos.sort((a,b) => {
+    if(a.completed === b.completed){
+      return a.id - b.id
+    }
+    if(a.completed){
+      return 1;
+    }
+    return -1;
+  })
   return todos.map((todo, index) => {
     return (
       <TodoListItem key={index}>
