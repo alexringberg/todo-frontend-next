@@ -48,30 +48,35 @@ const TodoListItem = styled.li`
   list-style-type: none;
   width: 100%;
   display: flex;
-  align-items: center;
+  padding: 5px;
 `;
 
 const TodoListItemInput = styled.input`
-  width: 10%;
-  background-color: brown;
+  width: 5%;
+  margin-top: 4px;
 `;
 
 const TodoListItemP = styled.p`
   width: 90%;
   font-size: 15px;
   text-align: left;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  color: #FFFFFF;
+  color: #7fffd4;
+  font-weight: 300;
+  margin: 0px;
 `;
 
 const TodoListItemButton = styled.button`
   border: transparent;
-  color: #F5DDDD;
-  font-weight: 800;
-  border-radius: 5px;
-  background: #BB86FC;
+  color: #e0ffff;
+  font-weight: 700;
+  border-radius: 7px;
+  background: #e26a6a;
   width: 9%;
-  max-height: 25px;
+  max-height: 20px;
+  height: 20px;
+  width: 25px;
+  line-height: 20px;
+  box-sizing: border-box;
 `;
 
 export default Todos;

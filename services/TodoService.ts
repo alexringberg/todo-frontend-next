@@ -1,9 +1,12 @@
 import { ITodo } from "../models/Todos";
 
+export const apiServer = "http://spring-api.alexringberg.com:8080/api/todos"
+
+
 export const GetTodoListAPI = async () => {
   try {
     const fetchedTodoList = await fetch(
-      "https://ringberg-todo-app.herokuapp.com/api/todos",
+      `${apiServer}`,
       {
         method: "GET",
       }
@@ -18,7 +21,7 @@ export const GetTodoListAPI = async () => {
 export const AddTodoAPI = async (todoDescription: string) => {
   try {
     const fetchedTodoAdd = await fetch(
-      "https://ringberg-todo-app.herokuapp.com/api/todos",
+      `${apiServer}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -37,7 +40,7 @@ export const AddTodoAPI = async (todoDescription: string) => {
 
 export const UpdateTodoAPI = async (todo: ITodo) => {
     try{
-        const fetchedTodoUpdate = await fetch(`https://ringberg-todo-app.herokuapp.com/api/todos/${todo.id}`, {
+        const fetchedTodoUpdate = await fetch(`${apiServer}/${todo.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(todo),
@@ -50,7 +53,7 @@ export const UpdateTodoAPI = async (todo: ITodo) => {
 
 export const DeleteTodoAPI = async (id: number) => {
     try{
-        const fetchedTodoDelete = await fetch(`https://ringberg-todo-app.herokuapp.com/api/todos/${id}`, {
+        const fetchedTodoDelete = await fetch(`${apiServer}${id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
         })

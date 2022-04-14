@@ -68,18 +68,23 @@ const TodoListDiv = styled.div`
   min-height: 300px;
   padding: 25px;
   transform: translateY(-50%);
-  margin: 50vh auto;
+  margin: 45vh auto;
   border-radius: 15px;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #1F1B24;
+  background-color: #393f57;
 `
 
 const TodoListTitle = styled.h1`
-  font-size: 25px;
-  color: #FFFFFF;
+  font-size: 35px;
+  color: #7fffd4;
+  padding: 2px;
+  margin-top: 0px;
+  text-align: center;
+  font-weight: 200;
+  font-family: 'Roboto Condensed';
 `
 
 const TodoListForm = styled.form`
@@ -94,14 +99,16 @@ const TodoListFormItem = styled.input`
   border-radius: 5px;
   padding: 5px 10px;
   width: 80%;
+  margin-left: 10px;
 `
 
 const TodoListFormButton = styled.button`
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-  color: white;
-  background-color: #3700B3;
+  color: #000000;
+  background-color: #ffa07a;
+  font-weight: 600;
 `
 
 const TodoList = styled.ul`
@@ -109,7 +116,8 @@ const TodoList = styled.ul`
   flex-direction: column;
   gap: 5px;
   min-width: 100%;
-  padding: 5px
+  padding: 5px;
+  margin-right: 5px;
 `
 
 export default Home
