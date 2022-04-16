@@ -1,6 +1,6 @@
 import { ITodo } from "../models/Todos";
 
-export const apiServer = "http://spring-api.alexringberg.com:8080/api/todos"
+export const apiServer = "https://ringberg-todo-app.herokuapp.com/api/todos"
 
 
 export const GetTodoListAPI = async () => {
