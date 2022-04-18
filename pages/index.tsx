@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from "react";
-import { GetTodoListAPI, AddTodoAPI, UpdateTodoAPI, DeleteTodoAPI } from '../services/TodoService';
-import { ITodo } from '../models/Todos';
+import { useEffect, useState } from "react"
+import { GetTodoListAPI, AddTodoAPI, UpdateTodoAPI, DeleteTodoAPI } from '../services/TodoService'
+import { ITodo } from '../models/Todos'
 import styled from "styled-components"
-import Todos from '../components/Todos';
-import TodoEditModal from '../components/TodoEditModal';
+import Todos from '../components/Todos'
+import TodoEditModal from '../components/TodoEditModal'
 
 
 const Home: NextPage = () => {
@@ -13,7 +13,9 @@ const Home: NextPage = () => {
   const [todos, setTodos] = useState<ITodo[]>([])
   const [showEditModal, setShowEditModal] = useState<boolean>(false)
   const [todoEditText, setTodoEditText] = useState<string>("")
+  const [todoId, setTodoId] = useState<number>(0)
 
+  const completedTodos = todos.map(x => x.completed);
   useEffect(() => {
     GetData();
   }, []);
@@ -31,24 +33,30 @@ const Home: NextPage = () => {
       return
     }    
     await AddTodoAPI(newTodoText)
-    GetData()
-  };
-
-  const UpdateTodo = async (index: number) => {
-    const todoToUpdate = todos[index]
-    setShowEditModal(true)
-    setTodoEditText(todoToUpdate.description)
-
-    //todoToUpdate.description = todoEditText
-    //await UpdateTodoAPI(todoToUpdate)
     await GetData()
   };
 
-  const ToggleCompleted = async (index: number) => {
-    const newTodos = [...todos];
-    const todoToUpdate = newTodos[index];
+  const SubmitEditTodo = async (text: string) => {
+    const todoToUpdate = todos[todoId]
+    todoToUpdate.description = text
+
+    await UpdateTodoAPI({...todoToUpdate})
+    await GetData()
+  }
+
+  const UpdateTodo = async (index: number) => {
+    setTodoId(index)
+    const todoToUpdate = todos[index]
+    setShowEditModal(true)    
+    setTodoEditText(todoToUpdate.description)
+  };
+
+  const ToggleCompleted = async (e: Event, index: number) => {
+    e.preventDefault()
+    const todoToUpdate = todos[index];
     todoToUpdate.completed = !todoToUpdate.completed;
-    newTodos[index] = todoToUpdate;
+    todoToUpdate.description = todoEditText
+    todos[index] = todoToUpdate;
 
     await UpdateTodoAPI(todoToUpdate)
     await GetData()
@@ -65,15 +73,15 @@ const Home: NextPage = () => {
 
   const ToggleModal = async (show: boolean) => {
     setShowEditModal(show)
-    console.log(todoEditText)
   }
 
   if(showEditModal){
-    return(<TodoEditModal todoText={todoEditText} showModal={ToggleModal} updateTodoText={setTodoEditText}></TodoEditModal>)
+    return(
+      <TodoEditModal show={showEditModal} todoText={todoEditText} showModal={ToggleModal} updateTodoText={SubmitEditTodo}></TodoEditModal> 
+    )
   }
 
   return (
-    <>
     <TodoListDiv>     
       <TodoListTitle>Ringberg ToDo List</TodoListTitle>
       <TodoListForm onSubmit={(e : any) => { AddTodo(e) }}>
@@ -84,7 +92,7 @@ const Home: NextPage = () => {
         <Todos todos={todos} isLoading={isLoading} toggleCompleted={ToggleCompleted} deleteTodo={DeleteTodo} updateTodo={UpdateTodo} ></Todos>
       </TodoList>
     </TodoListDiv>
-    </>
+    
   );
 }
 
@@ -126,6 +134,7 @@ const TodoListFormItem = styled.input`
   padding: 5px 10px;
   width: 80%;
   margin-left: 10px;
+  margin-bottom: 10px;
 `
 
 const TodoListFormButton = styled.button`
@@ -136,6 +145,7 @@ const TodoListFormButton = styled.button`
   background-color: #ffa07a;
   font-weight: 600;
   margin-right: 5px;
+  margin-bottom: 10px;
 `
 
 const TodoList = styled.ul`

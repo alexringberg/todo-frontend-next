@@ -4,11 +4,14 @@ import { faPencil } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
-  todos: ITodo[];
-  isLoading: boolean;
-  toggleCompleted: (index: number) => void;
-  deleteTodo: (index: number) => void;
-  updateTodo: (index: number) => void;
+  todos: ITodo[]
+  isLoading: boolean
+  toggleCompleted: (e: any, index: number) => void
+  deleteTodo: (index: number) => void
+  updateTodo: (index: number) => void
+}
+export interface ItemProps {
+  completed: boolean
 }
 
 const Todos = ({ todos, isLoading, toggleCompleted, deleteTodo, updateTodo }: Props): any => {
@@ -17,14 +20,14 @@ const Todos = ({ todos, isLoading, toggleCompleted, deleteTodo, updateTodo }: Pr
       return a.id - b.id
     }
     if(a.completed){
-      return 1;
+      return 1
     }
-    return -1;
+    return -1
   })
 
   if(isLoading){
     return (
-      <WaitText>Please wait while backend api spins up. . .</WaitText>
+      <WaitText>Please wait while backend api spins up...</WaitText>
     )
   }
 
@@ -34,29 +37,18 @@ const Todos = ({ todos, isLoading, toggleCompleted, deleteTodo, updateTodo }: Pr
         <TodoListItemInput
           type="checkbox"
           checked={todo.completed}
-          onChange={(e) => {
-            toggleCompleted(index);
-          }}
+          onChange={(e: any) => { toggleCompleted(e, index) }}
         ></TodoListItemInput>
-        <TodoListItemP
-          style={{ textDecoration: todo.completed ? "line-through" : "" }}
-        >
+        <TodoListItemP completed={todo.completed}>
           {todo.description}
         </TodoListItemP>
-        <TodoListEditButton onClick={(e) => {updateTodo(index) }}>
-          <FontAwesomeIcon icon={faPencil} size="xs" />
+        <TodoListEditButton onClick={(e) => { updateTodo(index) }}><FontAwesomeIcon icon={faPencil} size="xs" />
         </TodoListEditButton>
-        <TodoListItemButton
-          onClick={(e) => {
-            deleteTodo(index);
-          }}
-        >
-          X
-        </TodoListItemButton>
+        <TodoListItemButton onClick={(e) => { deleteTodo(index) }}>X</TodoListItemButton>
       </TodoListItem>
-    );
-  });
-};
+    )
+  })
+}
 
 const WaitText = styled.p`
   color: #7fffd4;
@@ -78,6 +70,7 @@ const TodoListItemInput = styled.input`
 `;
 
 const TodoListItemP = styled.p`
+  text-decoration: ${(props: ItemProps) => props.completed ? "line-through" : ""};
   width: 90%;
   font-size: 15px;
   text-align: left;
