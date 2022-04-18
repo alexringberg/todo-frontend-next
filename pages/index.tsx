@@ -6,7 +6,6 @@ import styled from "styled-components"
 import Todos from '../components/Todos'
 import TodoEditModal from '../components/TodoEditModal'
 
-
 const Home: NextPage = () => {
   const [newTodoText, setNewTodoText] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -15,7 +14,6 @@ const Home: NextPage = () => {
   const [todoEditText, setTodoEditText] = useState<string>("")
   const [todoId, setTodoId] = useState<number>(0)
 
-  const completedTodos = todos.map(x => x.completed);
   useEffect(() => {
     GetData();
   }, []);
@@ -23,6 +21,7 @@ const Home: NextPage = () => {
   const GetData = async () => {
       setIsLoading(true)
       setTodos(await GetTodoListAPI())
+      console.log(todos)
       setNewTodoText("")
       setIsLoading(false)
   };
@@ -55,7 +54,6 @@ const Home: NextPage = () => {
     e.preventDefault()
     const todoToUpdate = todos[index];
     todoToUpdate.completed = !todoToUpdate.completed;
-    todoToUpdate.description = todoEditText
     todos[index] = todoToUpdate;
 
     await UpdateTodoAPI(todoToUpdate)
