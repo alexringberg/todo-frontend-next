@@ -2,7 +2,6 @@ import { ITodo } from "../models/Todos";
 
 export const apiServer = "https://ringberg-todo-app.herokuapp.com/api/todos"
 
-
 export const GetTodoListAPI = async () => {
   try {
     const fetchedTodoList = await fetch(

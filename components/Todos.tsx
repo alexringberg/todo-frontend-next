@@ -1,13 +1,17 @@
 import { ITodo } from "../models/Todos";
 import styled from "styled-components";
+import { faPencil } from "@fortawesome/free-solid-svg-icons" 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
   todos: ITodo[];
-  updateTodo: (index: number) => void;
+  isLoading: boolean;
+  toggleCompleted: (index: number) => void;
   deleteTodo: (index: number) => void;
+  updateTodo: (index: number) => void;
 }
 
-const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
+const Todos = ({ todos, isLoading, toggleCompleted, deleteTodo, updateTodo }: Props): any => {
   todos.sort((a,b) => {
     if(a.completed === b.completed){
       return a.id - b.id
@@ -17,6 +21,13 @@ const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
     }
     return -1;
   })
+
+  if(isLoading){
+    return (
+      <WaitText>Please wait while backend api spins up. . .</WaitText>
+    )
+  }
+
   return todos.map((todo, index) => {
     return (
       <TodoListItem key={index}>
@@ -24,7 +35,7 @@ const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
           type="checkbox"
           checked={todo.completed}
           onChange={(e) => {
-            updateTodo(index);
+            toggleCompleted(index);
           }}
         ></TodoListItemInput>
         <TodoListItemP
@@ -32,6 +43,9 @@ const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
         >
           {todo.description}
         </TodoListItemP>
+        <TodoListEditButton onClick={(e) => {updateTodo(index) }}>
+          <FontAwesomeIcon icon={faPencil} size="xs" />
+        </TodoListEditButton>
         <TodoListItemButton
           onClick={(e) => {
             deleteTodo(index);
@@ -43,6 +57,13 @@ const Todos = ({ todos, updateTodo, deleteTodo }: Props): any => {
     );
   });
 };
+
+const WaitText = styled.p`
+  color: #7fffd4;
+  font-size: 35;
+  text-align: center;
+  font-weight: 800;
+`
 
 const TodoListItem = styled.li`
   list-style-type: none;
@@ -67,7 +88,7 @@ const TodoListItemP = styled.p`
 
 const TodoListItemButton = styled.button`
   border: transparent;
-  color: #e0ffff;
+  color: #000000;
   font-weight: 700;
   border-radius: 7px;
   background: #e26a6a;
@@ -77,6 +98,21 @@ const TodoListItemButton = styled.button`
   width: 25px;
   line-height: 20px;
   box-sizing: border-box;
+  margin-left: 2px;
 `;
+
+const TodoListEditButton = styled.button`
+  border: transparent;
+  color: #000000;
+  font-weight: 700;
+  border-radius: 7px;
+  background: #f4d03f;
+  width: 9%;
+  max-height: 20px;
+  height: 20px;
+  width: 25px;
+  line-height: 20px;
+  box-sizing: border-box;
+`
 
 export default Todos;
