@@ -52,7 +52,7 @@ export const UpdateTodoAPI = async (todo: ITodo) => {
 
 export const DeleteTodoAPI = async (id: number) => {
     try{
-        const fetchedTodoDelete = await fetch(`${apiServer}${id}`, {
+        const fetchedTodoDelete = await fetch(`${apiServer}/${id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
         })
