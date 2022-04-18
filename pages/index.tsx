@@ -1,43 +1,64 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from "react";
-import { GetTodoListAPI, AddTodoAPI, UpdateTodoAPI, DeleteTodoAPI } from '../services/TodoService';
-import { ITodo } from '../models/Todos';
+import { useEffect, useState } from "react"
+import { GetTodoListAPI, AddTodoAPI, UpdateTodoAPI, DeleteTodoAPI } from '../services/TodoService'
+import { ITodo } from '../models/Todos'
 import styled from "styled-components"
-import Todos from '../components/Todos';
+import Todos from '../components/Todos'
+import TodoEditModal from '../components/TodoEditModal'
 
 const Home: NextPage = () => {
-  const [newTodoText, setNewTodoText] = useState<string>("");
-  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [todos, setTodos] = useState<ITodo[]>([])
+  const [showEditModal, setShowEditModal] = useState<boolean>(false)
+  const [todoEditText, setTodoEditText] = useState<string>("")
+  const [todoId, setTodoId] = useState<number>(0)
 
   useEffect(() => {
     GetData();
   }, []);
 
   const GetData = async () => {
+      setIsLoading(true)
       setTodos(await GetTodoListAPI())
+      console.log(todos)
       setNewTodoText("")
+      setIsLoading(false)
   };
 
   const AddTodo = async (e : Event) => {
     e.preventDefault()
     if (newTodoText.trim() === "" || !newTodoText) {
       return
-    }
-    
-    const res = await AddTodoAPI(newTodoText)
-
-    GetData()
+    }    
+    await AddTodoAPI(newTodoText)
+    await GetData()
   };
 
+  const SubmitEditTodo = async (text: string) => {
+    const todoToUpdate = todos[todoId]
+    todoToUpdate.description = text
+
+    await UpdateTodoAPI({...todoToUpdate})
+    await GetData()
+  }
+
   const UpdateTodo = async (index: number) => {
-    const newTodos = [...todos];
-    const todoToUpdate = newTodos[index];
+    setTodoId(index)
+    const todoToUpdate = todos[index]
+    setShowEditModal(true)    
+    setTodoEditText(todoToUpdate.description)
+  };
+
+  const ToggleCompleted = async (e: Event, index: number) => {
+    e.preventDefault()
+    const todoToUpdate = todos[index];
     todoToUpdate.completed = !todoToUpdate.completed;
-    newTodos[index] = todoToUpdate;
+    todos[index] = todoToUpdate;
 
     await UpdateTodoAPI(todoToUpdate)
     await GetData()
-  };
+  }
 
   const DeleteTodo = async (index: number) => {
     const newTodos = [...todos];
@@ -48,17 +69,28 @@ const Home: NextPage = () => {
     await DeleteTodoAPI(todoToDelete)
   };
 
+  const ToggleModal = async (show: boolean) => {
+    setShowEditModal(show)
+  }
+
+  if(showEditModal){
+    return(
+      <TodoEditModal show={showEditModal} todoText={todoEditText} showModal={ToggleModal} updateTodoText={SubmitEditTodo}></TodoEditModal> 
+    )
+  }
+
   return (
-    <TodoListDiv>
+    <TodoListDiv>     
       <TodoListTitle>Ringberg ToDo List</TodoListTitle>
       <TodoListForm onSubmit={(e : any) => { AddTodo(e) }}>
         <TodoListFormItem type="text" name="newTodo" value={newTodoText}onChange={(e) => setNewTodoText(e.target.value)}></TodoListFormItem>
         <TodoListFormButton>Add</TodoListFormButton>
       </TodoListForm>
       <TodoList>
-        <Todos todos={todos} updateTodo={UpdateTodo} deleteTodo={DeleteTodo}></Todos>
+        <Todos todos={todos} isLoading={isLoading} toggleCompleted={ToggleCompleted} deleteTodo={DeleteTodo} updateTodo={UpdateTodo} ></Todos>
       </TodoList>
     </TodoListDiv>
+    
   );
 }
 
@@ -66,7 +98,7 @@ const TodoListDiv = styled.div`
   max-width: 360px;
   max-height: fit-content;
   min-height: 300px;
-  padding: 25px;
+  padding: 15px;
   transform: translateY(-50%);
   margin: 45vh auto;
   border-radius: 15px;
@@ -100,6 +132,7 @@ const TodoListFormItem = styled.input`
   padding: 5px 10px;
   width: 80%;
   margin-left: 10px;
+  margin-bottom: 10px;
 `
 
 const TodoListFormButton = styled.button`
@@ -109,6 +142,8 @@ const TodoListFormButton = styled.button`
   color: #000000;
   background-color: #ffa07a;
   font-weight: 600;
+  margin-right: 5px;
+  margin-bottom: 10px;
 `
 
 const TodoList = styled.ul`
@@ -116,8 +151,8 @@ const TodoList = styled.ul`
   flex-direction: column;
   gap: 5px;
   min-width: 100%;
-  padding: 5px;
-  margin-right: 5px;
+  margin: 0px;
+  padding: 0px;
 `
 
 export default Home
