@@ -5,6 +5,7 @@ import { ITodo } from '../models/Todos'
 import styled from "styled-components"
 import Todos from '../components/Todos'
 import TodoEditModal from '../components/TodoEditModal'
+import { device } from '../models/Breakpoints'
 
 const Home: NextPage = () => {
   const [newTodoText, setNewTodoText] = useState<string>("")
@@ -95,9 +96,6 @@ const Home: NextPage = () => {
 }
 
 const TodoListDiv = styled.div`
-  max-width: 360px;
-  max-height: fit-content;
-  min-height: 300px;
   padding: 15px;
   transform: translateY(-50%);
   margin: 45vh auto;
@@ -107,16 +105,45 @@ const TodoListDiv = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #393f57;
+
+  @media ${device.mobileL} {
+    max-width: 360px;
+    max-height: fit-content;
+    min-height: 300px;
+  }
+
+  @media ${device.tablet} {
+    max-width: 600px;
+    max-height: fit-content;
+    min-height: 300px;
+  }
+
+  @media ${device.laptopL} {
+    max-width: 1200px;
+    max-height: fit-content;
+    min-height: 600px;
+  }
 `
 
 const TodoListTitle = styled.h1`
-  font-size: 35px;
   color: #7fffd4;
   padding: 2px;
   margin-top: 0px;
   text-align: center;
   font-weight: 200;
   font-family: 'Roboto Condensed';
+
+  @media ${device.mobileL} {
+    font-size: 35px;
+  }
+
+  @media ${device.tablet} {
+    font-size: 40px;
+  }
+
+  @media ${device.laptopL} {
+    font-size: 55px;
+  }
 `
 
 const TodoListForm = styled.form`
@@ -130,9 +157,22 @@ const TodoListFormItem = styled.input`
   border: 1px solid gray;
   border-radius: 5px;
   padding: 5px 10px;
-  width: 80%;
-  margin-left: 10px;
   margin-bottom: 10px;
+
+  @media ${device.mobileL} {
+    width: 80%;
+    margin-left: 10px;
+  }
+
+  @media ${device.tablet} {
+    width: 85%;
+    margin-left: 15px;
+  }
+
+  @media ${device.laptopL} {
+    width: 90%;
+    margin-left: 30px;
+  }
 `
 
 const TodoListFormButton = styled.button`
